@@ -25,25 +25,29 @@
         <button onclick="fetchData()" class="btn btn-primary">Atualizar Dados</button>
     </div>
     <div id="sensorData" class="d-flex flex-wrap justify-content-center">
-        <!-- Os dados dos sensores serão carregados aqui -->
+        <div class="col-md-4"><i class="fa-solid fa-temperature-half"></i> <b>Temperatura:</b> <span id="tempValue">--</span> °C</div>
+        <div class="col-md-4"><i class="fa-solid fa-droplet"></i> <b>Umidade:</b> <span id="humidityValue">--</span> %</div>
+        <div class="col-md-4"><i class="fa-solid fa-hand-holding-water"></i> <b>Umidade do Solo:</b> <span id="soilMoistureValue">--</span> %</div>
+        <div class="col-md-4"><i class="fa-solid fa-cloud"></i> <b>Níveis de CO2:</b> <span id="co2Value">--</span> ppm</div>
+        <div class="col-md-4"><i class="fa-solid fa-sun"></i> <b>Luz:</b> <span id="lightValue">--</span> lux</div>
+        <div class="col-md-4"><i class="fa-solid fa-seedling"></i> <b>pH do Solo:</b> <span id="phValue">--</span></div>
     </div>
 </div>
 
 
+
 <script>
 function fetchData() {
-    $('#sensorData').html('<div class="col-12">s</div>');
     $.getJSON('data.php', function(data) {
-        $('#sensorData').html(`
-            <div class="col-md-4"><i class="fa-solid fa-temperature-half"></i> <b>Temperatura:</b> ${data.temperature} °C</div>
-            <div class="col-md-4"><i class="fa-solid fa-droplet"></i> <b>Umidade:</b> ${data.humidity} %</div>
-            <div class="col-md-4"><i class="fa-solid fa-hand-holding-water"></i> <b>Umidade do Solo:</b> ${data.soil_moisture} %</div>
-            <div class="col-md-4"><i class="fa-solid fa-cloud"></i> <b>Níveis de CO2:</b> ${data.co2_levels} ppm</div>
-            <div class="col-md-4"><i class="fa-solid fa-sun"></i> <b>Luz:</b> ${data.light} lux</div>
-            <div class="col-md-4"><i class="fa-solid fa-seedling"></i> <b>pH do Solo:</b> ${data.soil_ph}</div>
-        `);
+        $('#tempValue').text(data.temperature);
+        $('#humidityValue').text(data.humidity);
+        $('#soilMoistureValue').text(data.soil_moisture);
+        $('#co2Value').text(data.co2_levels);
+        $('#lightValue').text(data.light_intensity);
+        $('#phValue').text(data.soil_ph);
     });
 }
+
 $(document).ready(function() {
     fetchData(); // Carregar dados ao iniciar
     setInterval(fetchData, 1000); // Atualizar dados a cada 1 segundo

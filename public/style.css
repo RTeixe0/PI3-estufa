@@ -1,0 +1,30 @@
+body {
+    background-color: #343a40; /* Cinza escuro */
+}
+
+.navbar-brand i {
+    margin-right: 10px;
+}
+
+footer {
+    width: 100%;
+    bottom: 0;
+    
+}
+
+h1{
+    color: rgb(8, 209, 8);
+}
+
+#cab a:link, #cab a:visited{
+
+    color: #FFF;
+    padding: 8px 12px;
+}
+
+#cab a:hover{
+
+    color: white;
+    background: rgb(11, 230, 11);
+    text-decoration: none;
+}

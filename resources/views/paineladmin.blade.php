@@ -34,18 +34,19 @@
                     <td>
                         <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
                             @csrf
-                            <input type="hidden" name="status" value="approved">
-                            <button type="submit" class="btn btn-success">Aprovar</button>
+                            @method('POST')
+                            <div class="form-group">
+                                <input type="hidden" name="status" value="approved">
+                                <label for="response">Resposta:</label>
+                                <textarea name="response" class="form-control">{{ $comment->response }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">Aprovar e Responder</button>
                         </form>
                         <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
                             @csrf
+                            @method('POST')
                             <input type="hidden" name="status" value="rejected">
                             <button type="submit" class="btn btn-danger">Reprovar</button>
-                        </form>
-                        <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
-                            @csrf
-                            <input type="text" name="response" placeholder="Adicionar resposta" required>
-                            <button type="submit" class="btn btn-primary">Responder</button>
                         </form>
                     </td>
                 </tr>

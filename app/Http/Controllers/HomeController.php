@@ -32,6 +32,6 @@ class HomeController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Comentário criado com sucesso!');
+        return redirect()->back()->with('success', 'Comentário enviado para aprovação!');
     }
 }

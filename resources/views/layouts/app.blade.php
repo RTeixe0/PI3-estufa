@@ -12,7 +12,7 @@
         @yield('content')
     </div>
     <footer>
-        Desenvolvido por EricFNL1
+        Desenvolvido por Eric, Renan, Marilia & Tais
     </footer>
 </body>
 </html>

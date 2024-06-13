@@ -10,7 +10,7 @@
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{route('index')}}">
             <i class="fas fa-seedling"></i> Controle de Estufa
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,14 +19,31 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" id="cab">
-                    <a class="nav-link" href="#">HOME</a>
+                    <a class="nav-link" href="{{route('index')}}">HOME</a>
                 </li>
                 <li class="nav-item" id="cab">
-                    <a class="nav-link" href="#">COMENTÁRIOS</a>
+                    <a class="nav-link" href="{{route('comments.approved')}}">COMENTÁRIOS</a>
                 </li>
-                <li class="nav-item" id="cab">
-                    <a class="nav-link" href="#">LOGIN</a>
-                </li>
+                @if (Auth::check())
+                    @if (Auth::user()->id == 1 or 2 or 3)
+                        <li class="nav-item" id="cab">
+                            <a class="nav-link" href="{{ route('admin.comments.index') }}">PAINEL ADMINISTRATIVO</a>
+                        </li>
+                    @endif
+                    <li class="nav-item" id="cab">
+                        <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            LOGOUT
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </li>
+                @else
+                    <li class="nav-item" id="cab">
+                        <a class="nav-link" href="{{ route('login') }}">LOGIN</a>
+                    </li>
+                @endif
             </ul>
         </div>
     </nav>
@@ -35,6 +52,17 @@
         <h1 class="text-center">Bem-vindo ao Controle de Estufa</h1>
         <p class="text-center">Gerencie sua estufa de forma eficiente e inteligente.</p>
     </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
 
     <div class="container mt-3">
         @if (session('success'))

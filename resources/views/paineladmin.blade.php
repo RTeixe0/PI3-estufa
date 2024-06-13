@@ -12,27 +12,14 @@
         </div>
     @endif
 
-    <!-- Formulário de Importação -->
-    <form action="{{ route('admin.comments.import') }}" method="POST" enctype="multipart/form-data" class="mb-3">
-        @csrf
-        <div class="form-group">
-            <label for="file">Importar Comentários (JSON):</label>
-            <input type="file" name="file" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Importar</button>
-    </form>
-
-    <!-- Botão de Exportação -->
-    <form action="{{ route('admin.comments.export') }}" method="GET">
-        <button type="submit" class="btn btn-secondary mb-3">Exportar Comentários (JSON)</button>
-    </form>
-
     <table class="table table-bordered mt-4">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Usuário</th>
                 <th>Comentário</th>
+                <th>Resposta</th>
+                <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -41,19 +28,24 @@
                 <tr>
                     <td>{{ $comment->id }}</td>
                     <td>{{ $comment->user->name }}</td>
-                    <td>{{ $comment->content }}</td>
+                    <td>{{ $comment->comment }}</td>
+                    <td>{{ $comment->response }}</td>
+                    <td>{{ $comment->status }}</td>
                     <td>
                         <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
                             @csrf
-                            @method('PATCH')
                             <input type="hidden" name="status" value="approved">
                             <button type="submit" class="btn btn-success">Aprovar</button>
                         </form>
                         <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
                             @csrf
-                            @method('PATCH')
                             <input type="hidden" name="status" value="rejected">
                             <button type="submit" class="btn btn-danger">Reprovar</button>
+                        </form>
+                        <form method="POST" action="{{ route('admin.comments.update', $comment->id) }}" class="d-inline">
+                            @csrf
+                            <input type="text" name="response" placeholder="Adicionar resposta" required>
+                            <button type="submit" class="btn btn-primary">Responder</button>
                         </form>
                     </td>
                 </tr>

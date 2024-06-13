@@ -10,7 +10,7 @@
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{route('index')}}">
+        <a class="navbar-brand" href="{{ route('index') }}">
             <i class="fas fa-seedling"></i> Controle de Estufa
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,13 +19,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" id="cab">
-                    <a class="nav-link" href="{{route('index')}}">HOME</a>
+                    <a class="nav-link" href="{{ route('index') }}">HOME</a>
                 </li>
                 <li class="nav-item" id="cab">
-                    <a class="nav-link" href="{{route('comments.approved')}}">COMENTÁRIOS</a>
+                    <a class="nav-link" href="{{ route('comments.approved') }}">COMENTÁRIOS</a>
                 </li>
                 @if (Auth::check())
-                    @if (Auth::user()->id == 1 or 2 or 3)
+                    @if (Auth::user()->id == 1 || Auth::user()->id == 2 || Auth::user()->id == 3)
                         <li class="nav-item" id="cab">
                             <a class="nav-link" href="{{ route('admin.comments.index') }}">PAINEL ADMINISTRATIVO</a>
                         </li>
@@ -63,7 +63,6 @@
     <br>
     <br>
 
-
     <div class="container mt-3">
         @if (session('success'))
             <div class="alert alert-success">
@@ -79,16 +78,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
-        @if(isset($comments) && $comments->isEmpty())
-        @elseif(isset($comments))
-            @foreach($comments as $comment)
-                <div class="comment">
-                    <p><strong>{{ $comment->user->name }}</strong>: {{ $comment->comment }}</p>
-                </div>
-            @endforeach
-        @else
-        @endif
     </div>
+
 
     <footer class="bg-secondary text-white pt-1 pb-1 mt-4">
         <div class="container text-center">

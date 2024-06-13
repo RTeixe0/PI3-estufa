@@ -26,7 +26,7 @@ class HomeController extends Controller
             'comment' => 'required|string',
         ]);
 
-        $comment = Comment::create([
+        Comment::create([
             'user_id' => $validatedData['user_id'],
             'comment' => $validatedData['comment'],
             'status' => 'pending',

@@ -1,11 +1,13 @@
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
+from flask_cors import CORS  # Adicione esta linha
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from bson import ObjectId
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # Adicione esta linha
 
 # Configuração do MongoDB
 app.config["MONGO_URI"] = "mongodb://localhost:27017/estufa"

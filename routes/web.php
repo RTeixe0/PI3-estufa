@@ -6,12 +6,16 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SensorDashboardController;
+use App\Http\Controllers\HomeController;
+
 use MongoDB\Client as MongoClient;
 
 // Rota inicial
 Route::get('/', [PaginaController::class, 'index'])->name('index');
 
 Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware('auth');
 
 
 // Rotas de autenticação

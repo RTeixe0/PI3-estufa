@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SensorDashboardController;
 use MongoDB\Client as MongoClient;
 
 // Rota inicial
@@ -20,11 +22,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+Route::get('/', [SensorDashboardController::class, 'index'])->name('index');
+
 // Rota pós login
 Route::get('/poslog', function () {
     return view('poslog');
 })->middleware(['auth', 'verified'])->name('poslog');
-
 
 Route::get('/test-mongodb', function () {
     // Conectar ao MongoDB

@@ -24,6 +24,9 @@
                 </li>
                 @if (Auth::check())
                     <li class="nav-item" id="cab">
+                        <a class="nav-link" href="{{ route('admin.sensors.index') }}">Admin Panel</a>
+                    </li>
+                    <li class="nav-item" id="cab">
                         <a class="nav-link" href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             LOGOUT
@@ -90,6 +93,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Extrair dados do PHP para JavaScript
             var sensorData = @json($sensors);
+            console.log(sensorData); // Adicione esta linha para ver os dados no console
 
             // Função para criar gráfico
             function createChart(context, label, data, color) {
@@ -137,12 +141,12 @@
             var soilPhData = sensorData.map(sensor => sensor.soil_ph);
 
             // Criar gráficos
-            createChart(document.getElementById('temperatureChart').getContext('2d'), 'Temperatura', temperatureData, 'rgba(255, 99, 132, 1)');
-            createChart(document.getElementById('humidityChart').getContext('2d'), 'Umidade', humidityData, 'rgba(54, 162, 235, 1)');
+            createChart(document.getElementById('temperatureChart').getContext('2d'), 'Temperature', temperatureData, 'rgba(255, 99, 132, 1)');
+            createChart(document.getElementById('humidityChart').getContext('2d'), 'Humidity', humidityData, 'rgba(54, 162, 235, 1)');
             createChart(document.getElementById('soilMoistureChart').getContext('2d'), 'Soil Moisture', soilMoistureData, 'rgba(75, 192, 192, 1)');
             createChart(document.getElementById('co2LevelsChart').getContext('2d'), 'CO2 Levels', co2LevelsData, 'rgba(153, 102, 255, 1)');
-            createChart(document.getElementById('lightIntensityChart').getContext('2d'), 'Intensidade da Luz', lightIntensityData, 'rgba(255, 159, 64, 1)');
-            createChart(document.getElementById('soilPhChart').getContext('2d'), 'pH do Solo', soilPhData, 'rgba(255, 206, 86, 1)');
+            createChart(document.getElementById('lightIntensityChart').getContext('2d'), 'Light Intensity', lightIntensityData, 'rgba(255, 159, 64, 1)');
+            createChart(document.getElementById('soilPhChart').getContext('2d'), 'Soil pH', soilPhData, 'rgba(255, 206, 86, 1)');
         });
     </script>
 </body>

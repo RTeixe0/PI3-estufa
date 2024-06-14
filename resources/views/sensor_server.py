@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from bson import ObjectId
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -44,7 +45,8 @@ def store_sensor_data():
         'soil_moisture': round(last_soil_moisture, 2),
         'co2_levels': round(last_co2, 2),
         'light_intensity': round(last_light, 2),
-        'soil_ph': round(last_soil_ph, 2)
+        'soil_ph': round(last_soil_ph, 2),
+        'timestamp': datetime.utcnow()
     }
     # Inserção dos dados no MongoDB
     mongo.db.sensors.insert_one(sensores)
@@ -69,6 +71,7 @@ def convert_objectid(data):
 def sensors():
     if request.method == 'POST':
         data = request.get_json()
+        data['timestamp'] = datetime.utcnow()  # Adicionar timestamp na inserção manual também
         mongo.db.sensors.insert_one(data)
         return jsonify(data), 201
     else:

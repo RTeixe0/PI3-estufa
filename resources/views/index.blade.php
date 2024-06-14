@@ -21,15 +21,7 @@
                 <li class="nav-item" id="cab">
                     <a class="nav-link" href="{{ route('index') }}">HOME</a>
                 </li>
-                <li class="nav-item" id="cab">
-                    <a class="nav-link" href="{{ route('comments.approved') }}">COMENTÁRIOS</a>
-                </li>
                 @if (Auth::check())
-                    @if (Auth::user()->id == 1 || Auth::user()->id == 2 || Auth::user()->id == 3)
-                        <li class="nav-item" id="cab">
-                            <a class="nav-link" href="{{ route('admin.comments.index') }}">PAINEL ADMINISTRATIVO</a>
-                        </li>
-                    @endif
                     <li class="nav-item" id="cab">
                         <a class="nav-link" href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -51,35 +43,37 @@
     <div class="container mt-5">
         <h1 class="text-center">Bem-vindo ao Controle de Estufa</h1>
         <p class="text-center">Gerencie sua estufa de forma eficiente e inteligente.</p>
+        
+        <!-- Tabela para exibir os dados dos sensores -->
+        <div class="table-responsive mt-4">
+            <table class="table table-dark table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Temperatura</th>
+                        <th>Umidade</th>
+                        <th>Soil Moisture</th>
+                        <th>Niveis CO2</th>
+                        <th>Instensidade da Luz</th>
+                        <th>PH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($sensors as $sensor)
+                        <tr>
+                            <td>{{ $sensor->_id }}</td>
+                            <td>{{ $sensor->temperature }}</td>
+                            <td>{{ $sensor->humidity }}</td>
+                            <td>{{ $sensor->soil_moisture }}</td>
+                            <td>{{ $sensor->co2_levels }}</td>
+                            <td>{{ $sensor->light_intensity }}</td>
+                            <td>{{ $sensor->soil_ph }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <div class="container mt-3">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('comments.store') }}">
-            @csrf
-            <div class="form-group">
-                <label for="comment">Deixe um Comentário:</label>
-                <textarea name="comment" id="comment" class="form-control" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-    </div>
-
 
     <footer class="bg-secondary text-white pt-1 pb-1 mt-4">
         <div class="container text-center">

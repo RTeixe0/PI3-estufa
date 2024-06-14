@@ -3,13 +3,14 @@ use App\Http\Controllers\PaginaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AdminCommentController;
+use App\Http\Controllers\DashboardController;
+use MongoDB\Client as MongoClient;
 
 // Rota inicial
 Route::get('/', [PaginaController::class, 'index'])->name('index');
+
+Route::get('/', [DashboardController::class, 'index'])->name('index');
+
 
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -24,15 +25,21 @@ Route::get('/poslog', function () {
     return view('poslog');
 })->middleware(['auth', 'verified'])->name('poslog');
 
-// Rota de comentários
-Route::post('/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/test-mongodb', function () {
+    // Conectar ao MongoDB
+    $client = new MongoClient(env('DB_CONNECTION_STRING'));
 
-Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-Route::get('/comments/approved', [HomeController::class, 'showApprovedComments'])->name('comments.approved');
+    // Selecionar a coleção 'users'
+    $collection = $client->selectCollection('nome_do_seu_banco_de_dados', 'users');
 
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/comments', [AdminCommentController::class, 'index'])->name('admin.comments.index');
-    Route::post('/comments/update/{comment}', [AdminCommentController::class, 'update'])->name('admin.comments.update');
+    // Inserir um documento na coleção
+    $collection->insertOne(['name' => 'Test User']);
+
+    // Recuperar todos os documentos da coleção
+    $cursor = $collection->find();
+    $users = iterator_to_array($cursor);
+
+    // Retornar os documentos como JSON
+    return response()->json($users);
 });

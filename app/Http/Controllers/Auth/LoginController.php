@@ -29,7 +29,7 @@ class LoginController extends Controller
         if ($user) {
             // Tenta fazer o login
             if (Auth::attempt($credentials)) {
-                return redirect()->route('index'); // Redireciona para a página index
+                return redirect()->route('adm'); // Redireciona para a página do painel do administrador
             }
 
             return redirect()->back()->withErrors(['password' => 'Credenciais inválidas.']);

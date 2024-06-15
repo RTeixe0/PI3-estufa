@@ -7,17 +7,18 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SensorDashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdmPanelController;
 
 use MongoDB\Client as MongoClient;
 
 // Rota inicial
 Route::get('/', [PaginaController::class, 'index'])->name('index');
 
-Route::get('/', [DashboardController::class, 'index'])->name('index');
+//Route::get('/', [DashboardController::class, 'index'])->name('index');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware('auth');
 
-
+Route::get('/adm', [AdmPanelController::class, 'index'])->name('adm')->middleware('auth');
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

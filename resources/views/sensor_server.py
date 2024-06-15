@@ -53,6 +53,8 @@ def store_sensor_data():
     # Inserção dos dados no MongoDB
     mongo.db.sensors.insert_one(sensores)
 
+    print(f'Dados inseridos: {sensores}')
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=store_sensor_data, trigger='interval', seconds=1)
 scheduler.start()

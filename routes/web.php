@@ -17,6 +17,9 @@ Route::get('/', [DashboardController::class, 'index'])->name('index');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware('auth');
 
+Route::get('/admin/mongo-data', [AdminController::class, 'getMongoData'])->name('admin.mongoData');
+
+
 
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

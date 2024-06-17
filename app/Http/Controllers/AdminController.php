@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use MongoDB\Client as MongoClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use MongoDB\Client as MongoDBClient;
 
 class AdminController extends Controller
 {
@@ -12,7 +13,7 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        $client = new MongoClient(env('DB_CONNECTION_STRING'));
+        $client = new MongoClient(env('mongodb://localhost:27017/'));
         $this->collection = $client->selectCollection('estufa', 'sensors');
     }
 
@@ -33,5 +34,25 @@ class AdminController extends Controller
             Log::error('Error in index method: ' . $e->getMessage());
             return response()->view('errors.500', [], 500);
         }
+        $mongo = new MongoDBClient(env('mongodb://localhost:27017/'));
+        $collection = $mongo->estufa->sensors;
+
+        // Obter os dados do MongoDB
+        $sensors = $collection->find()->toArray();
+
+        return view('admin.index', compact('sensors'));
+        
+  
+    }
+    public function getMongoData()
+    {
+        // Conectar ao MongoDB
+        $mongo = new MongoDBClient(env('mongodb://localhost:27017/'));
+        $collection = $mongo->estufa->sensors;
+
+        // Obter os dados do MongoDB
+        $sensors = $collection->find()->toArray();
+
+        return response()->json($sensors);
     }
 }

@@ -8,17 +8,19 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SensorDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdmPanelController;
+use App\Http\Controllers\EstufasController;
+use App\Http\Controllers\RelatoriosController;
 
 use MongoDB\Client as MongoClient;
 
-// Rota inicial
-Route::get('/', [PaginaController::class, 'index'])->name('index');
+
 
 //Route::get('/', [DashboardController::class, 'index'])->name('index');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware('auth');
 
 Route::get('/adm', [AdmPanelController::class, 'index'])->name('adm')->middleware('auth');
+
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -28,6 +30,12 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/', [SensorDashboardController::class, 'index'])->name('index');
+
+// Rotas protegidas por autenticação
+
+    Route::get('/estufa1', [EstufasController::class, 'index'])->name('estufa1')->middleware('auth');
+    Route::get('/relatoriotemp', [RelatoriosController::class, 'index'])->name('relatoriotemp')->middleware('auth');
+
 
 // Rota pós login
 Route::get('/poslog', function () {
@@ -51,3 +59,5 @@ Route::get('/test-mongodb', function () {
     // Retornar os documentos como JSON
     return response()->json($users);
 });
+
+

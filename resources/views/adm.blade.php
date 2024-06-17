@@ -5,20 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
     <link rel="stylesheet" href="{{ asset('style1.css') }}">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
-<body>
-    <header>
-    <i class="ph ph-plant"></i><!-- <img src="logo.png" alt="Logo" class="logo"> -->
-        <h1>   Painel Administrativo   </h1> <i class="ph ph-list-magnifying-glass"></i>
+
+<header>
+    <nav class="navbar navbar-light " id="nav-inicial1">
+        <div class="container-fluid">
+            <div class="icone-flor">
+            <i class="ph ph-plant"></i>
+            </div>
+            <div class="escrita-painel">
+            <h1>Painel Administrativo</h1>
+            </div>
+            <div class="logout">
+            <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            LOGOUT
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+            </div>
+        </div>
+    </nav>
+
     </header>
+<body style="background-color: #212529;">
+
     <main>
         <div class="button-container">
-            <a href="browse_sensores" class="button">
+            <a href="estufa1" class="button">
             <i class="ph ph-tree"></i><br>
-                <span>Vila Madalena</span>
+                <span>Estufa 1</span>
             </a>
-            <a href="estufa2.html" class="button">
+            <a href="admin" class="button">
             <i class="ph ph-acorn"></i>
                 <span>Estufa 2</span>
             </a>
@@ -36,5 +57,22 @@
             </a>
         </div>
     </main>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer>
+        <p>Desenvolvido</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </body>
 </html>

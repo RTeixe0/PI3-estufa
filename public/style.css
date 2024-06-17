@@ -9,7 +9,7 @@ body {
 footer {
     width: 100%;
     bottom: 0;
-    
+
 }
 
 h1{
@@ -37,4 +37,14 @@ b{
     color: white;
     background: rgb(11, 230, 11);
     text-decoration: none;
+}
+
+.nav {
+    padding: 16px;
+
+}
+
+.nav1 {
+    padding-top: 16px;
+
 }

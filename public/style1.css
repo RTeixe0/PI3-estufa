@@ -1,18 +1,19 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
 
-header {
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+
+/* header {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #4CAF50;
     color: white;
     padding: 20px;
-}
+} */
 
 .logo {
     width: 50px;
@@ -20,9 +21,9 @@ header {
     margin-right: 20px;
 }
 
-h1 {
+/* h1 {
     margin: 0;
-}
+} */
 
 .button-container {
     margin-top: 90px;
@@ -66,4 +67,42 @@ h1 {
 }
 span {
     margin: 10px;
+}
+
+.container-fluid {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.icone-flor {
+    display: flex;
+    justify-content: flex-start;
+    color: aliceblue;
+}
+.escrita-painel {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    color: aliceblue;
+}
+
+.logout {
+    margin-right: 20px;
+    color: aliceblue;
+}
+#nav-inicial1{
+    background-color: rgb(33, 176, 62);
+  }
+
+  footer{
+    width: 100%;
+    bottom: 0;
+    background-color: #333;
+    position: sticky;
+    padding: 50px;
+  }
+
+
+  .content {
+    flex: 1;
 }

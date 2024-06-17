@@ -19,9 +19,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item" id="cab">
-                    <a class="nav-link" href="{{ route('index') }}">HOME</a>
-                </li>
+
                 @if (Auth::check())
                     <li class="nav-item" id="cab">
                         <a class="nav-link" href="{{ route('adm') }}">PAINEL ADMIN</a>
@@ -51,7 +49,11 @@
         <div class="row">
             <div class="col-md-6">
                 <canvas id="temperatureChart"></canvas>
+                <div>
+                    <a href="relatoriotemp"><button>Relatorio Temperatura</button></a>
+                </div>
             </div>
+
             <div class="col-md-6">
                 <canvas id="humidityChart"></canvas>
             </div>

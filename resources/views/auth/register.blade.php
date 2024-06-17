@@ -25,6 +25,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
+        <p>Já tem uma conta? <a href="{{ route('login') }}">Login</a></p>
+        <p><a href="{{ route('index') }}">Voltar à página inicial</a></p>
     </div>
 </div>
 @endsection

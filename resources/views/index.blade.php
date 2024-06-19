@@ -20,6 +20,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item" id="cab">
+                    <a class="nav-link" href="{{ route('index') }}">HOME</a>
+                </li>
                 @if (Auth::check())
                     <li class="nav-item" id="cab">
                         <a class="nav-link" href="{{ route('admin.index') }}">PAINEL ADMIN</a>
@@ -49,9 +52,9 @@
         <div class="container p-3 text-center">
             <h2>Últimos Dados dos Sensores</h2>
             <div id="sensorData" class="d-flex flex-wrap justify-content-center mt-5">
-                <div class="col-md-4 mt-4"><i class="fa-solid"></i> <b>Temperatura:</b> <span id="tempValue">--</span> °C</div>
-                <div class="col-md-4 mt-4"><i class="fa-solid"></i><b>Umidade:</b> <span id="humidityValue">--</span> %</div>
-                <div class="col-md-4 mt-4"><i class="fa-solid"></i><b>Umidade do Solo:</b> <span id="soilMoistureValue">--</span> %</div>
+                <div class="col-md-4"><i class="fa-solid"></i> <b>Temperatura:</b> <span id="tempValue">--</span> °C</div>
+                <div class="col-md-4"><i class="fa-solid"></i><b>Umidade:</b> <span id="humidityValue">--</span> %</div>
+                <div class="col-md-4"><i class="fa-solid"></i><b>Umidade do Solo:</b> <span id="soilMoistureValue">--</span> %</div>
                 <div class="col-md-4 mt-4"><i class="fa-solid"></i> <b>Níveis de CO2:</b> <span id="co2Value">--</span> ppm</div>
                 <div class="col-md-4 mt-4"><i class="fa-solid"></i><b>Luz:</b> <span id="lightValue">--</span> lux</div>
                 <div class="col-md-4 mt-4"><i class="fa-solid"></i><b>pH do Solo:</b> <span id="phValue">--</span></div>
@@ -62,7 +65,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="card bg-secondary text-white">
-                        <div class="card-header">Gráfico de Temperatura e Umidade(Média Por Tempo)</div>
+                        <div class="card-header">Gráfico de Temperatura e Umidade(Média por tempo)</div>
                         <div class="card-body">
                             <canvas id="tempHumChart"></canvas>
                         </div>
@@ -70,7 +73,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card bg-secondary text-white">
-                        <div class="card-header">Gráfico de Níveis de CO2 e Luz(Média Por Tempo)</div>
+                        <div class="card-header">Gráfico de Níveis de CO2 e Luz(Média por tempo)</div>
                         <div class="card-body">
                             <canvas id="co2LightChart"></canvas>
                         </div>
@@ -114,17 +117,32 @@
                 });
         }
 
+        function fetchMongoData() {
+            axios.get('{{ route('admin.mongoData') }}')
+                .then(response => {
+                    const data = response.data;
+                    updateMongoCharts(data); // Atualizar gráficos com os dados do MongoDB
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados do MongoDB:', error);
+                });
+        }
+
         function updateCharts(data) {
             const time = new Date().toLocaleTimeString();
             tempHumChart.data.labels.push(time);
             tempHumChart.data.datasets[0].data.push(data.temperature);
             tempHumChart.data.datasets[1].data.push(data.humidity);
 
-            co2LightChart.data.labels.push(time);
-            co2LightChart.data.datasets[0].data.push(data.co2_levels);
-            co2LightChart.data.datasets[1].data.push(data.light_intensity);
-
             tempHumChart.update();
+        }
+
+        function updateMongoCharts(data) {
+            const time = new Date().toLocaleTimeString();
+            co2LightChart.data.labels.push(time);
+            co2LightChart.data.datasets[0].data.push(data[data.length - 1].co2_levels);
+            co2LightChart.data.datasets[1].data.push(data[data.length - 1].light_intensity);
+
             co2LightChart.update();
         }
 
@@ -132,8 +150,10 @@
         let co2LightChart;
 
         document.addEventListener('DOMContentLoaded', function() {
-            fetchData(); // Carregar dados ao iniciar
-            setInterval(fetchData, 5000); // Atualizar dados a cada 1 segundo
+            fetchData(); // Carregar dados da API ao iniciar
+            fetchMongoData(); // Carregar dados do MongoDB ao iniciar
+            setInterval(fetchData, 1000); // Atualizar dados da API a cada 1 segundo
+            setInterval(fetchMongoData, 5000); // Atualizar dados do MongoDB a cada 10 segundos
 
             const ctxTempHum = document.getElementById('tempHumChart').getContext('2d');
             tempHumChart = new Chart(ctxTempHum, {
@@ -158,6 +178,15 @@
                     ],
                 },
                 options: {
+
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white' // Cor das letras da legenda
+                            }
+                        }
+                    },
                     responsive: true,
                     scales: {
                         x: {
@@ -186,10 +215,9 @@
                 }
             });
 
-
             const ctxCo2Light = document.getElementById('co2LightChart').getContext('2d');
             co2LightChart = new Chart(ctxCo2Light, {
-                type: 'line',
+              type: 'line',
                 data: {
                     labels: [],
                     datasets: [
@@ -210,6 +238,14 @@
                     ],
                 },
                 options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white' // Cor das letras da legenda
+                            }
+                        }
+                    },
                     responsive: true,
                     scales: {
                         x: {

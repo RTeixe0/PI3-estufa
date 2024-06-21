@@ -74,7 +74,6 @@
     </div>
     <br>
     <br>
-    <br>
 
     <footer class="bg-secondary text-white pt-1 pb-1 mt-4">
         <div class="container text-center">
@@ -112,19 +111,34 @@
                     },
                     options: {
                         responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'white' // Define a cor das labels da legenda para branco
+                                }
+                            }
+                        },
                         scales: {
                             x: {
                                 display: true,
                                 title: {
                                     display: true,
-                                    text: 'Time'
+                                    text: 'Time',
+                                    color: 'white' // Define a cor do título do eixo X para branco
+                                },
+                                ticks: {
+                                    color: 'white' // Define a cor dos ticks do eixo X para branco
                                 }
                             },
                             y: {
                                 display: true,
                                 title: {
                                     display: true,
-                                    text: label
+                                    text: label,
+                                    color: 'white' // Define a cor do título do eixo Y para branco
+                                },
+                                ticks: {
+                                    color: 'white' // Define a cor dos ticks do eixo Y para branco
                                 }
                             }
                         }

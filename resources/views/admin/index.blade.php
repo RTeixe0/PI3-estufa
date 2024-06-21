@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="style.css"> <!-- Link para o CSS customizado -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!-- Adicione esta linha -->
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,7 +48,7 @@
             <table class="table table-dark table-bordered">
                 <thead>
                     <tr>
-                        <th>timestamp</th>
+                        <th>Data</th>
                         <th>Temperatura</th>
                         <th>Umidade</th>
                         <th>Soil Moisture</th>
@@ -56,7 +57,7 @@
                         <th>PH</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="sensorTableBody">
                     @foreach ($sensors as $sensor)
                         <tr>
                             <td>{{ $sensor->timestamp }}</td>
@@ -91,6 +92,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Extrair dados do PHP para JavaScript
             var sensorData = @json($sensors);
+
+            // Função para converter timestamp para data legível
+            function convertTimestampToDate(timestamp) {
+                return moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+            }
+
+            // Atualizar tabela com datas legíveis
+            var tableBody = document.getElementById('sensorTableBody');
+            Array.from(tableBody.rows).forEach(function(row, index) {
+                var timestampCell = row.cells[0];
+                timestampCell.textContent = convertTimestampToDate(sensorData[index].timestamp);
+            });
 
             // Função para criar gráfico
             function createChart(context, label, data, color) {

@@ -47,7 +47,7 @@
             <table class="table table-dark table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>timestamp</th>
                         <th>Temperatura</th>
                         <th>Umidade</th>
                         <th>Soil Moisture</th>
@@ -59,7 +59,7 @@
                 <tbody>
                     @foreach ($sensors as $sensor)
                         <tr>
-                            <td>{{ $sensor->_id }}</td>
+                            <td>{{ $sensor->timestamp }}</td>
                             <td>{{ $sensor->temperature }}</td>
                             <td>{{ $sensor->humidity }}</td>
                             <td>{{ $sensor->soil_moisture }}</td>

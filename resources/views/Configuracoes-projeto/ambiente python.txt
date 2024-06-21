@@ -1,0 +1,14 @@
+Fazer download do mongodb https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-7.0.11-signed.msi
+fazer download do mongodb compass https://downloads.mongodb.com/compass/mongodb-compass-1.43.1-win32-x64.exe
+Abrir o mongodb compass e criar o banco de dados com nome estufa e a colecao com nome sensors
+intalar python
+instalar o flask "pip install Flask"
+baixar o repositorio e colocar na pasta htdocs do xampp
+dentro da pasta que contem os arquivos rodar o cmd e subir o servidor flask "python sensor_server.py" para dar inicio a API
+no cmd dar o comando "mongod" para rodar o banco de dados
+
+
+endereço da API "http://localhost:5000/api/sensors"
+api so funciona apos ligar o servidor flask
+
+apos os passos a API deve fornecer dados a cada segundo, os dados sao mandados diretamente para o BD no mongoDB e tambem para a dashboard, os dados na dashboard sao atualizados diretamente da API para uma atualizacao melhor e mais rapida

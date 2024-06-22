@@ -43,6 +43,12 @@
     <div class="container mt-5">
         <h1 class="text-center">LOG - GERAL</h1>
 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar no log...">
+            </div>
+        </div>
+
         <!-- Tabela para exibir os dados dos sensores -->
         <div class="table-responsive mt-4">
             <table class="table table-dark table-bordered">

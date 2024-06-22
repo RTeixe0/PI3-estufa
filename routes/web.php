@@ -45,6 +45,10 @@ Route::get('/admin/estufa-project', function () {
     return view('admin.index');
 })->name('estufa-project');
 
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chat-response', [ChatbotController::class, 'respond']);
+
 
 // Rota pós login
 Route::get('/poslog', function () {

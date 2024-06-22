@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style2.css">
     <link rel="stylesheet" href="style.css"> <!-- Link para o CSS customizado -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="chatbot.js"></script>
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -76,6 +79,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="chat-icon  text-right" onclick="toggleChat()">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHM9WryEK8tAMgMCG03vMkDWNEsEM37PE2XQ&s" alt="Chat Icon">
+    </div>
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <h2>Chatbot</h2>
+            <span class="close" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="bot-message">Olá! Como posso te ajudar?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+            <button onclick="sendMessage()">Enviar</button>
         </div>
     </div>
 

@@ -11,7 +11,7 @@
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ route('index') }}">
+        <a class="navbar-brand" href="#">
             <i class="fas fa-seedling"></i> Controle de Estufa
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,25 +19,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-
-                @if (Auth::check())
-                    <li class="nav-item" id="cab">
-                        <a class="nav-link" href="{{ route('adm') }}">VOLTAR</a>
-                    </li>
-                    <li class="nav-item" id="cab">
-                        <a class="nav-link" href="{{ route('logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            LOGOUT
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                    </li>
-                @else
-                    <li class="nav-item" id="cab">
-                        <a class="nav-link" href="{{ route('login') }}">LOGIN</a>
-                    </li>
-                @endif
+                <li class="nav-item" id="cab">
+                    <a class="nav-link" href="{{route('index')}}">VOLTAR</a>
+                </li>
+                <li class="nav-item" id="cab">
+                    <a class="nav-link" href="{{ route('logout') }}">LOGOUT</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -90,16 +77,34 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Extrair dados do PHP para JavaScript
-            var sensorData = @json($sensors);
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Função para buscar dados dos sensores do servidor
+            async function fetchSensorData() {
+                const response = await fetch('http://localhost:5000/api/sensors');
+                const data = await response.json();
+                console.log(data); // Adicione esta linha para verificar os dados
+                return data;
+            }
+
+            // Função para converter timestamp para data legível
+            function convertTimestampToDate(timestamp) {
+                return new Date(timestamp).toLocaleString('pt-BR', { timeZone: 'UTC' });
+            }
+
+            // Obter dados dos sensores
+            const sensorData = await fetchSensorData();
+
+            if (sensorData.length === 0) {
+                console.error("No sensor data available.");
+                return;
+            }
 
             // Função para criar gráfico
             function createChart(context, label, data, color) {
                 return new Chart(context, {
                     type: 'line',
                     data: {
-                        labels: data.map((_, index) => `Data ${index + 1}`),
+                        labels: sensorData.map(sensor => convertTimestampToDate(sensor.timestamp)),
                         datasets: [{
                             label: label,
                             data: data,
@@ -147,12 +152,12 @@
             }
 
             // Preparar dados para os gráficos
-            var temperatureData = sensorData.map(sensor => sensor.temperature);
-            var humidityData = sensorData.map(sensor => sensor.humidity);
-            var soilMoistureData = sensorData.map(sensor => sensor.soil_moisture);
-            var co2LevelsData = sensorData.map(sensor => sensor.co2_levels);
-            var lightIntensityData = sensorData.map(sensor => sensor.light_intensity);
-            var soilPhData = sensorData.map(sensor => sensor.soil_ph);
+            const temperatureData = sensorData.map(sensor => sensor.temperature);
+            const humidityData = sensorData.map(sensor => sensor.humidity);
+            const soilMoistureData = sensorData.map(sensor => sensor.soil_moisture);
+            const co2LevelsData = sensorData.map(sensor => sensor.co2_levels);
+            const lightIntensityData = sensorData.map(sensor => sensor.light_intensity);
+            const soilPhData = sensorData.map(sensor => sensor.soil_ph);
 
             // Criar gráficos
             createChart(document.getElementById('temperatureChart').getContext('2d'), 'Temperature', temperatureData, 'rgba(255, 99, 132, 1)');

@@ -41,6 +41,9 @@ Route::get('/estufa1', [EstufasController::class, 'index'])->name('estufa1')->mi
 
 Route::get('/relatoriotemp', [RelatoriosController::class, 'index'])->name('relatoriotemp')->middleware('auth');
 
+Route::get('/admin/estufa-project', function () {
+    return view('admin.index');
+})->name('estufa-project');
 
 
 // Rota pós login

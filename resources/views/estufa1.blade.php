@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="style.css"> <!-- Link para o CSS customizado -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/stock.js"></script>
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -20,7 +24,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" id="cab">
-                    <a class="nav-link" href="{{route('index')}}">VOLTAR</a>
+                    <a class="nav-link" href="{{route('adm')}}">VOLTAR</a>
                 </li>
                 <li class="nav-item" id="cab">
                     <a class="nav-link" href="{{ route('logout') }}">LOGOUT</a>
@@ -30,34 +34,23 @@
     </nav>
 
     <div class="container mt-5">
-        <h1 class="text-center">Painel Administrativo - Controle de Estufa</h1>
+        <h1 class="text-center text-success">Painel Administrativo - Controle de Estufa</h1>
 
-        <!-- Gráficos -->
-        <div class="row">
-            <div class="col-md-6">
-                <canvas id="temperatureChart"></canvas>
-            </div>
+        <!-- Menu de seleção de gráficos -->
+        <div class="form-group">
+            <label for="chartSelect">Selecione o gráfico para visualizar:</label>
+            <select class="form-control" id="chartSelect">
+                <option value="temperatureChart">Temperatura</option>
+                <option value="humidityChart">Umidade</option>
+                <option value="soilMoistureChart">Umidade do Solo</option>
+                <option value="co2LevelsChart">Níveis CO2</option>
+                <option value="lightIntensityChart">Intensidade da Luz</option>
+                <option value="soilPhChart">pH do solo</option>
+            </select>
+        </div>
 
-            <div class="col-md-6">
-                <canvas id="humidityChart"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <canvas id="soilMoistureChart"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="co2LevelsChart"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <canvas id="lightIntensityChart"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="soilPhChart"></canvas>
-            </div>
-        </div>
+        <!-- Container para os gráficos -->
+        <div id="chartContainer" class="mt-4" style="min-height: 400px;"></div>
     </div>
     <br>
     <br>
@@ -72,12 +65,12 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
+            let sensorData = [];
+            let temperatureData = [], humidityData = [], soilMoistureData = [], co2LevelsData = [], lightIntensityData = [], soilPhData = [];
+            let currentChart = null;
+
             // Função para buscar dados dos sensores do servidor
             async function fetchSensorData() {
                 const response = await fetch('http://localhost:5000/api/sensors');
@@ -86,86 +79,126 @@
                 return data;
             }
 
-            // Função para converter timestamp para data legível
-            function convertTimestampToDate(timestamp) {
-                return new Date(timestamp).toLocaleString('pt-BR', { timeZone: 'UTC' });
+            // Função para preparar dados dos gráficos
+            function prepareData() {
+                temperatureData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.temperature]));
+                humidityData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.humidity]));
+                soilMoistureData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.soil_moisture]));
+                co2LevelsData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.co2_levels]));
+                lightIntensityData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.light_intensity]));
+                soilPhData = aggregateData(sensorData.map(sensor => [new Date(sensor.timestamp).getTime(), sensor.soil_ph]));
             }
 
-            // Obter dados dos sensores
-            const sensorData = await fetchSensorData();
-
-            if (sensorData.length === 0) {
-                console.error("No sensor data available.");
-                return;
+            // Função para agregar dados para reduzir a quantidade de pontos no gráfico
+            function aggregateData(data, points = 100) {
+                if (data.length <= points) return data;
+                const factor = Math.ceil(data.length / points);
+                return data.filter((_, index) => index % factor === 0);
             }
 
-            // Função para criar gráfico
-            function createChart(context, label, data, color) {
-                return new Chart(context, {
-                    type: 'line',
-                    data: {
-                        labels: sensorData.map(sensor => convertTimestampToDate(sensor.timestamp)),
-                        datasets: [{
-                            label: label,
-                            data: data,
-                            backgroundColor: color,
-                            borderColor: color,
-                            fill: false,
-                            tension: 0.1
-                        }]
+            // Função para criar gráfico de linha
+            function createLineChart(container, title, data, color) {
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+
+                currentChart = Highcharts.chart(container, {
+                    chart: {
+                        type: 'line',
+                        backgroundColor: '#2b2b2b'
                     },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: 'white' // Define a cor das labels da legenda para branco
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: 'Time',
-                                    color: 'white' // Define a cor do título do eixo X para branco
-                                },
-                                ticks: {
-                                    color: 'white' // Define a cor dos ticks do eixo X para branco
-                                }
+                    title: {
+                        text: title,
+                        style: {
+                            color: '#FFFFFF'
+                        }
+                    },
+                    series: [{
+                        name: title,
+                        data: data,
+                        color: color
+                    }],
+                    xAxis: {
+                        labels: {
+                            style: {
+                                color: '#FFFFFF'
                             },
-                            y: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: label,
-                                    color: 'white' // Define a cor do título do eixo Y para branco
-                                },
-                                ticks: {
-                                    color: 'white' // Define a cor dos ticks do eixo Y para branco
-                                }
+                            formatter: function() {
+                                const date = new Date(this.value);
+                                const options = { timeZone: 'America/Sao_Paulo', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                                return new Intl.DateTimeFormat('pt-BR', options).format(date);
+                            }
+                        }
+                    },
+                    yAxis: {
+                        labels: {
+                            style: {
+                                color: '#FFFFFF'
                             }
                         }
                     }
                 });
             }
 
-            // Preparar dados para os gráficos
-            const temperatureData = sensorData.map(sensor => sensor.temperature);
-            const humidityData = sensorData.map(sensor => sensor.humidity);
-            const soilMoistureData = sensorData.map(sensor => sensor.soil_moisture);
-            const co2LevelsData = sensorData.map(sensor => sensor.co2_levels);
-            const lightIntensityData = sensorData.map(sensor => sensor.light_intensity);
-            const soilPhData = sensorData.map(sensor => sensor.soil_ph);
+            // Função para exibir o gráfico selecionado
+            function displaySelectedChart(chartId) {
+                let data, title, color;
 
-            // Criar gráficos
-            createChart(document.getElementById('temperatureChart').getContext('2d'), 'Temperature', temperatureData, 'rgba(255, 99, 132, 1)');
-            createChart(document.getElementById('humidityChart').getContext('2d'), 'Humidity', humidityData, 'rgba(54, 162, 235, 1)');
-            createChart(document.getElementById('soilMoistureChart').getContext('2d'), 'Soil Moisture', soilMoistureData, 'rgba(75, 192, 192, 1)');
-            createChart(document.getElementById('co2LevelsChart').getContext('2d'), 'CO2 Levels', co2LevelsData, 'rgba(153, 102, 255, 1)');
-            createChart(document.getElementById('lightIntensityChart').getContext('2d'), 'Light Intensity', lightIntensityData, 'rgba(255, 159, 64, 1)');
-            createChart(document.getElementById('soilPhChart').getContext('2d'), 'Soil pH', soilPhData, 'rgba(255, 206, 86, 1)');
+                switch(chartId) {
+                    case 'temperatureChart':
+                        data = temperatureData;
+                        title = 'Temperature';
+                        color = 'rgba(255, 99, 132, 1)';
+                        break;
+                    case 'humidityChart':
+                        data = humidityData;
+                        title = 'Humidity';
+                        color = 'rgba(54, 162, 235, 1)';
+                        break;
+                    case 'soilMoistureChart':
+                        data = soilMoistureData;
+                        title = 'Soil Moisture';
+                        color = 'rgba(75, 192, 192, 1)';
+                        break;
+                    case 'co2LevelsChart':
+                        data = co2LevelsData;
+                        title = 'CO2 Levels';
+                        color = 'rgba(153, 102, 255, 1)';
+                        break;
+                    case 'lightIntensityChart':
+                        data = lightIntensityData;
+                        title = 'Light Intensity';
+                        color = 'rgba(255, 159, 64, 1)';
+                        break;
+                    case 'soilPhChart':
+                        data = soilPhData;
+                        title = 'Soil pH';
+                        color = 'rgba(255, 206, 86, 1)';
+                        break;
+                    default:
+                        return;
+                }
+
+                document.getElementById('chartContainer').innerHTML = ''; // Limpar o container
+                const chartDiv = document.createElement('div');
+                chartDiv.id = chartId;
+                document.getElementById('chartContainer').appendChild(chartDiv);
+
+                createLineChart(chartId, title, data, color);
+            }
+
+            // Carregar dados dos sensores e preparar dados para os gráficos
+            sensorData = await fetchSensorData();
+            prepareData();
+
+            // Adicionar event listener ao menu de seleção
+            document.getElementById('chartSelect').addEventListener('change', function() {
+                const selectedChartId = this.value;
+                displaySelectedChart(selectedChartId);
+            });
+
+            // Exibir o primeiro gráfico por padrão
+            displaySelectedChart('temperatureChart');
         });
     </script>
 </body>

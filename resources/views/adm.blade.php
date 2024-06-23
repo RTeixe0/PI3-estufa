@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
-    <link rel="stylesheet" href="{{ asset('style1.css') }}">
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="style2.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <script src="chatbot.js"></script>
 </head>
 
 <header>
@@ -57,6 +60,23 @@
     <br>
     <br>
     <br>
+    <div class="chat-icon  text-right" onclick="toggleChat()">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHM9WryEK8tAMgMCG03vMkDWNEsEM37PE2XQ&s" alt="Chat Icon">
+    </div>
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <h2>Chatbot</h2>
+            <span class="close" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="bot-message">Olá! Como posso te ajudar?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
     <footer>
         <p>Desenvolvido para auxiliar no Gerenciamento de Estufas!</p>
     </footer>

@@ -24,6 +24,7 @@
                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
+            <p><a href="{{ route('index') }}">Voltar à página inicial</a></p>
         </form>
     </div>
 </div>

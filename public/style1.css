@@ -86,9 +86,11 @@ span {
     color: aliceblue;
 }
 
-.logout {
+.voltar {
     margin-right: 20px;
     color: aliceblue;
+    font-size: 20px;
+
 }
 #nav-inicial1{
     background-color: rgb(33, 176, 62);

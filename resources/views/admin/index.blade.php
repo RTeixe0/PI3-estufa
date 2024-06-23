@@ -12,7 +12,7 @@
 </head>
 <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <i class="fas fa-seedling"></i> Controle de Estufa
+        <i class="fas fa-seedling"></i> Controle de Estufa
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,7 +45,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar no log...">
+                <input type="date" id="searchInput" class="form-control" placeholder="Pesquisar no log...">
             </div>
         </div>
 
@@ -69,24 +69,27 @@
             </table>
         </div>
 
+        <!-- Controles de paginação -->
+        <div class="d-flex justify-content-between mt-2">
+            <button class="btn btn-primary" id="prevPage">Página Anterior</button>
+            <span id="pageIndicator"></span>
+            <button class="btn btn-primary" id="nextPage">Próxima Página</button>
+        </div>
+
         <!-- Gráficos -->
-        <div class="row">
+        <div class="row" id="chartsContainer" style="display: none;">
             <div class="col-md-6">
                 <canvas id="temperatureChart"></canvas>
             </div>
             <div class="col-md-6">
                 <canvas id="humidityChart"></canvas>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <canvas id="soilMoistureChart"></canvas>
             </div>
             <div class="col-md-6">
                 <canvas id="co2LevelsChart"></canvas>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <canvas id="lightIntensityChart"></canvas>
             </div>
@@ -112,6 +115,162 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            let currentPage = 1;
+            const pageSize = 100;
+            let allData = [];
+
+            // Função para buscar dados dos sensores do servidor
+            async function fetchSensorData() {
+                try {
+                    const response = await fetch('http://localhost:5000/api/sensors');
+                    const data = await response.json();
+                    console.log('Dados dos sensores:', data);
+                    allData = data;
+                    displayTableData();
+                    displayCharts(allData);
+                } catch (error) {
+                    console.error('Erro ao buscar dados dos sensores:', error);
+                }
+            }
+
+            // Função para exibir os dados na tabela
+            function displayTableData() {
+                const tableBody = document.getElementById('sensorTableBody');
+                tableBody.innerHTML = '';
+
+                const start = (currentPage - 1) * pageSize;
+                const end = start + pageSize;
+                const pageData = allData.slice(start, end);
+
+                pageData.forEach(sensor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(sensor.timestamp).toLocaleString('pt-BR', { timeZone: 'UTC' })}</td>
+                        <td>${sensor.temperature}</td>
+                        <td>${sensor.humidity}</td>
+                        <td>${sensor.soil_moisture}</td>
+                        <td>${sensor.co2_levels}</td>
+                        <td>${sensor.light_intensity}</td>
+                        <td>${sensor.soil_ph}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                document.getElementById('pageIndicator').innerText = `Página ${currentPage}`;
+            }
+
+            // Inicializar a primeira carga de dados
+            await fetchSensorData();
+
+            // Adicionar event listeners aos botões de paginação
+            document.getElementById('prevPage').addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayTableData();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', function() {
+                if ((currentPage * pageSize) < allData.length) {
+                    currentPage++;
+                    displayTableData();
+                }
+            });
+
+            // Função para preparar dados dos gráficos
+            function prepareData(data) {
+                return {
+                    temperatureData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.temperature })),
+                    humidityData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.humidity })),
+                    soilMoistureData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.soil_moisture })),
+                    co2LevelsData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.co2_levels })),
+                    lightIntensityData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.light_intensity })),
+                    soilPhData: data.map(sensor => ({ x: new Date(sensor.timestamp), y: sensor.soil_ph }))
+                };
+            }
+
+            // Função para criar gráfico
+            function createChart(context, label, data, color) {
+                return new Chart(context, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            backgroundColor: color,
+                            borderColor: color,
+                            fill: false,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'white' // Define a cor das labels da legenda para branco
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day',
+                                    displayFormats: {
+                                        day: 'MMM D'
+                                    },
+                                    tooltipFormat: 'll HH:mm'
+                                },
+                                ticks: {
+                                    color: 'white' // Define a cor dos ticks do eixo X para branco
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'white' // Define a cor dos ticks do eixo Y para branco
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Função para exibir gráficos
+            function displayCharts(data) {
+                const { temperatureData, humidityData, soilMoistureData, co2LevelsData, lightIntensityData, soilPhData } = prepareData(data);
+
+                createChart(document.getElementById('temperatureChart').getContext('2d'), 'Temperature', temperatureData, 'rgba(255, 99, 132, 1)');
+                createChart(document.getElementById('humidityChart').getContext('2d'), 'Humidity', humidityData, 'rgba(54, 162, 235, 1)');
+                createChart(document.getElementById('soilMoistureChart').getContext('2d'), 'Soil Moisture', soilMoistureData, 'rgba(75, 192, 192, 1)');
+                createChart(document.getElementById('co2LevelsChart').getContext('2d'), 'CO2 Levels', co2LevelsData, 'rgba(153, 102, 255, 1)');
+                createChart(document.getElementById('lightIntensityChart').getContext('2d'), 'Light Intensity', lightIntensityData, 'rgba(255, 159, 64, 1)');
+                createChart(document.getElementById('soilPhChart').getContext('2d'), 'Soil pH', soilPhData, 'rgba(255, 206, 86, 1)');
+            }
+
+            // Adicionar event listener ao campo de pesquisa
+            document.getElementById('searchInput').addEventListener('change', function(event) {
+                const query = event.target.value;
+                const filteredData = allData.filter(sensor => {
+                    const sensorDate = new Date(sensor.timestamp);
+                    const formattedDate = sensorDate.toISOString().split('T')[0];
+                    return formattedDate === query;
+                });
+                currentPage = 1; // Resetar para a primeira página ao filtrar
+                allData = filteredData;
+                displayTableData();
+
+                // Exibir gráficos apenas se houver dados filtrados
+                if (filteredData.length > 0) {
+                    document.getElementById('chartsContainer').style.display = 'block';
+                    displayCharts(filteredData);
+                } else {
+                    document.getElementById('chartsContainer').style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

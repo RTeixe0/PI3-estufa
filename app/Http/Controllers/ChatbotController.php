@@ -49,6 +49,9 @@ class ChatbotController extends Controller
             return "Os dados exibidos na tela Inicial são os ultimos dados por segundo que vieram dos sensores, Há tambem um relatorio por media de tempo em que voce se manteve na tela inical";
         }
         
+        if(strpos($message, 'estufa' ) !== false){
+            return "Ele monitora os dados de Temperatura, umidade, ph do solo, umidade do solo, Níveis de CO2 e intensidade de Luz";
+        }
 
         return "Desculpe, ainda estou aprendendo. Por favor, reformule sua pergunta.";
     }

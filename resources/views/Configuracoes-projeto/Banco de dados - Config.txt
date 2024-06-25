@@ -1,0 +1,9 @@
+nome - sg
+
+usuário - root
+
+senha - admin
+
+(Mesmo banco que utilizei no trabalho do Junior)
+
+-------------------------------------------------------

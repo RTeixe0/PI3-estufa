@@ -1,12 +1,38 @@
-Este repositório contém todos os códigos, esquemas e documentações de um projeto interdisciplinar desenvolvido por estudantes da FATEC de Itapira, destinado a abordar diversos Objetivos de Desenvolvimento Sustentável (ODS) propostos pela ONU. O projeto utiliza tecnologia Arduino para criar soluções sustentáveis que incluem:
 
-Estufas Inteligentes: Automação de estufas para otimização do crescimento das plantas através de controle de umidade, temperatura e nutrientes.
+# 🌿 Estufa Inteligente PI3 - FATEC Itapira
 
-Educação Ambiental: Desenvolvimento de um portal educacional que usa dados de sensores ambientais para promover a conscientização sobre sustentabilidade.
+Bem-vindo ao repositório do projeto Estufa Inteligente PI3, uma iniciativa interdisciplinar que utiliza tecnologias modernas para promover a sustentabilidade e a eficiência na agricultura.
 
-Agricultura Urbana: Plataforma para gerenciamento de jardins urbanos, usando sensores para melhorar a eficácia da agricultura em pequenas áreas.
+## 🌱 Sobre o Projeto
+Este projeto visa criar soluções sustentáveis para a agricultura urbana, maximizando a produção de alimentos e promovendo autonomia por meio do uso eficiente de recursos naturais.
 
-Gerenciamento de Parques: Aplicativo para monitoramento da saúde das plantas e uso eficiente de espaços verdes urbanos.
+### 📊 Sensores Utilizados
+- **Umidade do Ar e do Solo (DHT22):** Monitora a temperatura e umidade, essenciais para a germinação e crescimento das plantas.
+- **Luz (TSL2591):** Mede a iluminação com alta precisão, essencial para a fotossíntese; evita excesso de luz, que pode ser prejudicial.
+- **pH do Solo:** Mantém o equilíbrio químico necessário para a saúde das plantas.
+- **CO2 (MH-Z19):** Controla os níveis de CO2, influenciando o crescimento das plantas e a qualidade dos frutos.
 
-Objetivo:
-Promover a educação, a conscientização ambiental e o desenvolvimento de tecnologias sustentáveis que possam ser replicadas e adaptadas globalmente. Este projeto visa não só a implementação prática das soluções, mas também a disseminação de conhecimento e a formação de uma comunidade engajada no tema da sustentabilidade.
+## 🎯 Objetivos do Projeto
+- **Educação e Conscientização:** Promover a conscientização sobre práticas agrícolas sustentáveis.
+- **Tecnologia e Inovação:** Desenvolver tecnologias que possam ser adaptadas para uso global.
+
+## 🔧 Tecnologias e Ferramentas
+- **Arduino:** Utilizando modelos como Mega para a integração de múltiplos sensores.
+- **Dashboard Interativo:** Interface para visualização em tempo real dos dados coletados e gestão de alertas.
+
+## 👥 Colaboradores
+- Eric Faria
+- Marilia de Godoy
+- Renan Teixeira
+- Taís Vidotto
+
+## 🤝 Como Contribuir
+Contribuições para melhorar o projeto são sempre bem-vindas, seja na forma de código, melhorias na documentação ou sugestões de novas funcionalidades.
+
+
+## 📬 Contato
+Para mais informações ou dúvidas, sinta-se à vontade para contatar os colaboradores através dos perfis no GitHub.
+
+---
+
+*Junte-se a nós nessa jornada para criar um futuro mais verde e sustentável!*
